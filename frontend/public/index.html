@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CryptoSage — Learn Crypto Like a Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg: #080C14;
+  --bg2: #0D1321;
+  --bg3: #111827;
+  --panel: #141d2e;
+  --border: rgba(99,179,237,0.12);
+  --btc: #F7931A;
+  --eth: #627EEA;
+  --bnb: #F3BA2F;
+  --accent: #00E5FF;
+  --accent2: #7C3AED;
+  --green: #10B981;
+  --red: #EF4444;
+  --text: #E2E8F0;
+  --muted: #64748B;
+  --glow: 0 0 40px rgba(0,229,255,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ANIMATED BACKGROUND */
+.bg-grid{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;z-index:0;
+}
+.bg-orb{
+  position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;
+  animation:float 8s ease-in-out infinite;
+}
+.bg-orb-1{width:400px;height:400px;background:rgba(124,58,237,0.12);top:-100px;right:-100px}
+.bg-orb-2{width:300px;height:300px;background:rgba(0,229,255,0.08);bottom:100px;left:-80px;animation-delay:-4s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,12,20,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+}
+.header-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;
+  color:var(--accent);text-decoration:none;
+}
+.logo-icon{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+}
+nav{display:flex;gap:0.25rem}
+nav button{
+  background:none;border:none;color:var(--muted);
+  font-family:'DM Sans',sans-serif;font-size:0.9rem;
+  padding:8px 16px;border-radius:8px;cursor:pointer;
+  transition:all .2s;
+}
+nav button:hover,nav button.active{color:var(--text);background:rgba(255,255,255,0.06)}
+nav button.active{color:var(--accent)}
+
+/* LAYOUT */
+.app{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:2rem}
+.page{display:none}
+.page.active{display:block}
+
+/* HERO */
+.hero{
+  text-align:center;padding:3rem 0 2rem;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);
+  color:var(--accent);padding:6px 16px;border-radius:100px;
+  font-size:0.8rem;font-weight:500;margin-bottom:1.5rem;
+  font-family:'JetBrains Mono',monospace;
+}
+.pulse-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero h1{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.1;
+  background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:1rem;
+}
+.hero p{color:var(--muted);font-size:1.1rem;max-width:500px;margin:0 auto 2rem}
+
+/* PRICE TICKER */
+.ticker{
+  display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;
+}
+.ticker-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:1rem 1.5rem;
+  display:flex;align-items:center;gap:1rem;
+  cursor:pointer;transition:all .3s;
+  min-width:180px;
+}
+.ticker-card:hover{transform:translateY(-2px);border-color:rgba(0,229,255,0.3);box-shadow:var(--glow)}
+.coin-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;font-weight:700;
+}
+.btc-icon{background:rgba(247,147,26,0.15);color:var(--btc)}
+.eth-icon{background:rgba(98,126,234,0.15);color:var(--eth)}
+.bnb-icon{background:rgba(243,186,47,0.15);color:var(--bnb)}
+.coin-info .symbol{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--muted)}
+.coin-info .price{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem}
+.coin-change{font-size:0.85rem;font-family:'JetBrains Mono',monospace;padding:3px 8px;border-radius:6px}
+.up{color:var(--green);background:rgba(16,185,129,0.1)}
+.down{color:var(--red);background:rgba(239,68,68,0.1)}
+
+/* SECTION TITLES */
+.section-title{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:1.5rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:0.75rem;
+}
+.section-title .icon{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+
+/* GRID LAYOUTS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+/* CARDS */
+.card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:20px;padding:1.5rem;
+  transition:border-color .3s;
+}
+.card:hover{border-color:rgba(0,229,255,0.2)}
+
+/* CHART */
+.chart-container{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:20px;padding:1.5rem;margin-bottom:1.5rem;
+}
+.chart-tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.chart-tab{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--muted);padding:8px 16px;border-radius:10px;
+  cursor:pointer;font-size:0.85rem;transition:all .2s;
+  font-family:'JetBrains Mono',monospace;
+}
+.chart-tab:hover,.chart-tab.active{
+  background:rgba(0,229,255,0.1);
+  border-color:var(--accent);color:var(--accent);
+}
+.coin-selector{display:flex;gap:0.5rem;margin-bottom:1rem}
+.coin-btn{
+  padding:6px 14px;border-radius:8px;border:1px solid var(--border);
+  background:none;cursor:pointer;font-size:0.85rem;transition:all .2s;
+  font-family:'JetBrains Mono',monospace;
+}
+.coin-btn.btc{color:var(--btc)}.coin-btn.btc.active,.coin-btn.btc:hover{background:rgba(247,147,26,0.15);border-color:var(--btc)}
+.coin-btn.eth{color:var(--eth)}.coin-btn.eth.active,.coin-btn.eth:hover{background:rgba(98,126,234,0.15);border-color:var(--eth)}
+.coin-btn.bnb{color:var(--bnb)}.coin-btn.bnb.active,.coin-btn.bnb:hover{background:rgba(243,186,47,0.15);border-color:var(--bnb)}
+
+/* DCA CALCULATOR */
+.dca-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:1.5rem}
+@media(max-width:900px){.dca-grid{grid-template-columns:1fr}}
+.dca-form{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:1.5rem}
+.form-group{margin-bottom:1.25rem}
+.form-group label{
+  display:block;font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;
+  font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;
+}
+.form-group input,.form-group select{
+  width:100%;background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);padding:10px 14px;border-radius:10px;
+  font-size:0.95rem;font-family:'DM Sans',sans-serif;transition:border-color .2s;
+}
+.form-group input:focus,.form-group select:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,229,255,0.1)
+}
+.btn-primary{
+  width:100%;padding:12px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#000;font-weight:700;font-size:1rem;cursor:pointer;
+  font-family:'Syne',sans-serif;transition:all .2s;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 25px rgba(0,229,255,0.25)}
+.dca-results{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:1.5rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.result-item{background:var(--bg3);border-radius:12px;padding:1rem;text-align:center}
+.result-label{font-size:0.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;text-transform:uppercase;margin-bottom:0.4rem}
+.result-value{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem}
+.result-value.profit{color:var(--green)}
+.result-value.loss{color:var(--red)}
+
+/* LEARN PAGE */
+.learn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.learn-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:20px;padding:1.5rem;cursor:pointer;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.learn-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--card-color,var(--accent));opacity:0;transition:.3s;
+}
+.learn-card:hover{transform:translateY(-3px);border-color:var(--card-color,rgba(0,229,255,0.3))}
+.learn-card:hover::before{opacity:1}
+.learn-card-icon{font-size:2rem;margin-bottom:1rem}
+.learn-card h3{font-family:'Syne',sans-serif;font-weight:700;margin-bottom:0.5rem}
+.learn-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.learn-card .tag{
+  display:inline-block;margin-top:1rem;
+  font-size:0.75rem;font-family:'JetBrains Mono',monospace;
+  padding:3px 10px;border-radius:6px;
+  background:rgba(0,229,255,0.1);color:var(--accent);
+  border:1px solid rgba(0,229,255,0.2);
+}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(10px);z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:.3s;
+  padding:1rem;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:24px;max-width:700px;width:100%;
+  max-height:80vh;overflow-y:auto;padding:2rem;
+  transform:scale(.95);transition:.3s;
+}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal h2{font-family:'Syne',sans-serif;font-weight:800;margin-bottom:1rem;font-size:1.5rem}
+.modal-content{color:var(--text);line-height:1.8;font-size:0.95rem}
+.modal-content h2,.modal-content h3{font-family:'Syne',sans-serif;margin:1rem 0 0.5rem;color:var(--accent)}
+.modal-content strong{color:var(--text)}
+.modal-content code{
+  background:var(--bg3);padding:2px 6px;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent);
+}
+.modal-close{
+  position:sticky;top:0;float:right;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);padding:6px 14px;border-radius:8px;
+  cursor:pointer;font-size:0.85rem;
+}
+
+/* AI CHAT */
+.chat-layout{display:grid;grid-template-columns:280px 1fr;gap:1.5rem;height:calc(100vh - 180px);min-height:500px}
+@media(max-width:900px){.chat-layout{grid-template-columns:1fr;height:auto}}
+.chat-sidebar{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:1.25rem;overflow-y:auto}
+.sidebar-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--muted);margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.05em}
+.quick-btn{
+  width:100%;text-align:left;background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);padding:10px 12px;border-radius:10px;cursor:pointer;
+  font-size:0.85rem;margin-bottom:0.5rem;transition:all .2s;line-height:1.4;
+}
+.quick-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,229,255,0.05)}
+.chat-main{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:20px;display:flex;flex-direction:column;overflow:hidden;
+}
+.chat-header{
+  padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0.75rem;
+}
+.ai-avatar{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.ai-status{display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--green);margin-top:2px}
+.ai-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
+.chat-messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem}
+.msg{display:flex;gap:0.75rem;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.msg-avatar{
+  width:32px;height:32px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:0.9rem;
+}
+.msg.user .msg-avatar{background:rgba(124,58,237,0.2)}
+.msg.bot .msg-avatar{background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.msg-bubble{
+  max-width:80%;padding:12px 16px;border-radius:16px;
+  font-size:0.9rem;line-height:1.7;
+}
+.msg.user .msg-bubble{
+  background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.3);
+  border-top-right-radius:4px;
+}
+.msg.bot .msg-bubble{
+  background:var(--bg3);border:1px solid var(--border);
+  border-top-left-radius:4px;
+}
+.msg-bubble h2,.msg-bubble h3{font-family:'Syne',sans-serif;font-weight:700;margin:0.5rem 0 0.25rem;color:var(--accent);font-size:1rem}
+.msg-bubble strong{color:var(--text)}
+.msg-bubble ul,.msg-bubble ol{padding-left:1.2rem;margin:0.5rem 0}
+.msg-bubble code{background:var(--bg);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--accent)}
+.chat-input-area{padding:1.25rem 1.5rem;border-top:1px solid var(--border)}
+.chat-input-row{display:flex;gap:0.75rem}
+.chat-input{
+  flex:1;background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);padding:12px 16px;border-radius:12px;
+  font-size:0.95rem;font-family:'DM Sans',sans-serif;resize:none;
+  transition:border-color .2s;min-height:48px;max-height:120px;
+}
+.chat-input:focus{outline:none;border-color:var(--accent)}
+.send-btn{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;color:#000;width:48px;height:48px;border-radius:12px;
+  cursor:pointer;font-size:1.1rem;transition:all .2s;flex-shrink:0;
+}
+.send-btn:hover{transform:scale(1.05)}
+.model-badge{font-size:0.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:0.5rem;text-align:center}
+.typing-indicator{display:flex;gap:4px;padding:8px 0}
+.typing-dot{width:8px;height:8px;background:var(--muted);border-radius:50%;animation:typing .8s ease-in-out infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}
+.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-6px);opacity:1}}
+
+/* TRENDING */
+.trending-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.85rem 1rem;background:var(--bg3);border-radius:12px;margin-bottom:0.5rem;
+  border:1px solid transparent;transition:all .2s;
+}
+.trending-item:hover{border-color:var(--border)}
+.trending-rank{
+  width:24px;height:24px;border-radius:8px;background:var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;font-family:'JetBrains Mono',monospace;color:var(--muted);
+  flex-shrink:0;
+}
+.trending-name{flex:1;margin-left:0.75rem}
+.trending-name .name{font-weight:500;font-size:0.9rem}
+.trending-name .symbol{font-size:0.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+
+/* LOADING */
+.skeleton{background:linear-gradient(90deg,var(--panel) 25%,var(--bg3) 50%,var(--panel) 75%);background-size:200%;animation:shimmer 1.5s infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ANIMATIONS */
+.fade-in{animation:fadeIn .4s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .app{padding:1rem}
+  .ticker{gap:0.5rem}
+  .ticker-card{min-width:140px;padding:0.75rem 1rem}
+  .result-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo" onclick="showPage('home')">
+      <div class="logo-icon">₿</div>
+      CryptoSage
+    </a>
+    <nav>
+      <button class="active" onclick="showPage('home',this)">🏠 Home</button>
+      <button onclick="showPage('learn',this)">📚 Learn</button>
+      <button onclick="showPage('dca',this)">📊 DCA Calc</button>
+      <button onclick="showPage('chat',this)">🤖 AI Chat</button>
+    </nav>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active fade-in">
+    <div class="hero">
+      <div class="hero-badge"><span class="pulse-dot"></span> Live Crypto Data</div>
+      <h1>Learn Crypto.<br/>Master Your Wealth.</h1>
+      <p>Your AI-powered crypto education hub — prices, DCA strategies, and blockchain basics.</p>
+    </div>
+
+    <!-- Price Ticker -->
+    <div class="ticker" id="ticker">
+      <div class="ticker-card" onclick="showPage('chat',null,'Tell me about Bitcoin')">
+        <div class="coin-icon btc-icon">₿</div>
+        <div class="coin-info">
+          <div class="symbol">BTC</div>
+          <div class="price" id="btc-price">Loading...</div>
+        </div>
+        <div class="coin-change" id="btc-change">—</div>
+      </div>
+      <div class="ticker-card" onclick="showPage('chat',null,'Tell me about Ethereum')">
+        <div class="coin-icon eth-icon">Ξ</div>
+        <div class="coin-info">
+          <div class="symbol">ETH</div>
+          <div class="price" id="eth-price">Loading...</div>
+        </div>
+        <div class="coin-change" id="eth-change">—</div>
+      </div>
+      <div class="ticker-card" onclick="showPage('chat',null,'Tell me about BNB')">
+        <div class="coin-icon bnb-icon">◈</div>
+        <div class="coin-info">
+          <div class="symbol">BNB</div>
+          <div class="price" id="bnb-price">Loading...</div>
+        </div>
+        <div class="coin-change" id="bnb-change">—</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Chart -->
+      <div>
+        <div class="chart-container">
+          <div class="section-title" style="margin-bottom:1rem">
+            <div class="icon">📈</div> Price Chart
+          </div>
+          <div class="coin-selector">
+            <button class="coin-btn btc active" onclick="switchChart('btc',this)">₿ BTC</button>
+            <button class="coin-btn eth" onclick="switchChart('eth',this)">Ξ ETH</button>
+            <button class="coin-btn bnb" onclick="switchChart('bnb',this)">◈ BNB</button>
+          </div>
+          <div class="chart-tabs">
+            <button class="chart-tab active" onclick="switchDays(7,this)">7D</button>
+            <button class="chart-tab" onclick="switchDays(30,this)">30D</button>
+            <button class="chart-tab" onclick="switchDays(90,this)">90D</button>
+            <button class="chart-tab" onclick="switchDays(365,this)">1Y</button>
+          </div>
+          <canvas id="priceChart" height="220"></canvas>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div>
+        <!-- Trending -->
+        <div class="card" style="margin-bottom:1.5rem">
+          <div class="section-title">
+            <div class="icon">🔥</div> Trending Now
+          </div>
+          <div id="trending-list">
+            <div class="skeleton" style="height:48px;margin-bottom:8px"></div>
+            <div class="skeleton" style="height:48px;margin-bottom:8px"></div>
+            <div class="skeleton" style="height:48px"></div>
+          </div>
+        </div>
+
+        <!-- Quick Learn -->
+        <div class="card">
+          <div class="section-title">
+            <div class="icon">⚡</div> Quick Learn
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem">
+            <button class="quick-btn" onclick="openLearnModal('dca')">📊 What is DCA Strategy?</button>
+            <button class="quick-btn" onclick="openLearnModal('blockchain')">⛓️ How does blockchain work?</button>
+            <button class="quick-btn" onclick="openLearnModal('wallet')">🔐 Crypto wallets explained</button>
+            <button class="quick-btn" onclick="showPage('dca',null)">🧮 Calculate my DCA returns</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEARN PAGE -->
+  <div id="page-learn" class="page">
+    <div style="margin-bottom:2rem">
+      <div class="hero-badge"><span class="pulse-dot"></span> Crypto Academy</div>
+      <h1 style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;margin-top:0.5rem">Master the Fundamentals</h1>
+      <p style="color:var(--muted);margin-top:0.5rem">Click any topic to deep dive</p>
+    </div>
+
+    <div class="learn-grid" id="learn-grid">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+
+  <!-- DCA PAGE -->
+  <div id="page-dca" class="page">
+    <div style="margin-bottom:2rem">
+      <div class="hero-badge"><span class="pulse-dot"></span> DCA Calculator</div>
+      <h1 style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;margin-top:0.5rem">Dollar Cost Averaging</h1>
+      <p style="color:var(--muted);margin-top:0.5rem">See how regular investing would have performed</p>
+    </div>
+
+    <div class="dca-grid">
+      <div class="dca-form">
+        <div class="section-title"><div class="icon">⚙️</div> Parameters</div>
+        <div class="form-group">
+          <label>Select Cryptocurrency</label>
+          <select id="dca-coin">
+            <option value="btc">₿ Bitcoin (BTC)</option>
+            <option value="eth">Ξ Ethereum (ETH)</option>
+            <option value="bnb">◈ BNB (Binance Coin)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Investment Amount (USD)</label>
+          <input type="number" id="dca-amount" value="100" min="1" />
+        </div>
+        <div class="form-group">
+          <label>Frequency</label>
+          <select id="dca-freq">
+            <option value="daily">Daily</option>
+            <option value="weekly" selected>Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Period (Months)</label>
+          <select id="dca-months">
+            <option value="3">3 Months</option>
+            <option value="6" selected>6 Months</option>
+            <option value="12">1 Year</option>
+            <option value="24">2 Years</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="calcDCA()">⚡ Calculate DCA</button>
+
+        <div style="margin-top:1.5rem;padding:1rem;background:rgba(0,229,255,0.05);border-radius:12px;border:1px solid rgba(0,229,255,0.1)">
+          <p style="font-size:0.8rem;color:var(--muted);line-height:1.6">
+            ℹ️ <strong>What is DCA?</strong> Instead of investing all at once, you invest a fixed amount regularly — reducing the impact of market volatility.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <div class="dca-results" id="dca-results">
+          <div class="section-title"><div class="icon">📊</div> Results</div>
+          <p style="color:var(--muted);font-size:0.95rem">Set your parameters and click Calculate to see your DCA results.</p>
+        </div>
+        <div class="chart-container" style="margin-top:1.5rem">
+          <canvas id="dcaChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT PAGE -->
+  <div id="page-chat" class="page">
+    <div class="chat-layout">
+      <div class="chat-sidebar">
+        <div class="sidebar-title">💬 Quick Questions</div>
+        <button class="quick-btn" onclick="sendQuickMsg('Explain Bitcoin to me like I\'m 5 years old')">₿ Bitcoin for beginners</button>
+        <button class="quick-btn" onclick="sendQuickMsg('How does Ethereum smart contracts work?')">Ξ Ethereum smart contracts</button>
+        <button class="quick-btn" onclick="sendQuickMsg('What makes BNB valuable?')">◈ BNB value explained</button>
+        <button class="quick-btn" onclick="sendQuickMsg('Explain DCA investing strategy with examples')">📊 DCA strategy</button>
+        <button class="quick-btn" onclick="sendQuickMsg('How does blockchain technology work?')">⛓️ Blockchain basics</button>
+        <button class="quick-btn" onclick="sendQuickMsg('What is a crypto wallet and how do I keep it safe?')">🔐 Wallet security</button>
+        <button class="quick-btn" onclick="sendQuickMsg('What are the risks of investing in crypto?')">⚠️ Crypto risks</button>
+        <button class="quick-btn" onclick="sendQuickMsg('What is a bull market and bear market in crypto?')">📈 Bull vs Bear markets</button>
+        <button class="quick-btn" onclick="sendQuickMsg('What is DeFi and how does it work?')">🏦 What is DeFi?</button>
+        <button class="quick-btn" onclick="sendQuickMsg('How to create a beginner crypto portfolio with $500?')">💰 Beginner portfolio</button>
+
+        <div style="margin-top:1.5rem;padding:1rem;background:rgba(0,229,255,0.05);border-radius:12px;border:1px solid rgba(0,229,255,0.1)">
+          <p style="font-size:0.75rem;color:var(--muted);line-height:1.6">
+            🤖 <strong>AI Model:</strong> <span id="model-info">Connecting...</span><br/><br/>
+            Works without any API key! Add Groq or OpenRouter key for enhanced responses.
+          </p>
+        </div>
+      </div>
+
+      <div class="chat-main">
+        <div class="chat-header">
+          <div class="ai-avatar">🧠</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700">CryptoSage AI</div>
+            <div class="ai-status">Online & Ready</div>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg bot">
+            <div class="msg-avatar">🧠</div>
+            <div class="msg-bubble">
+              <strong>Welcome to CryptoSage!</strong> 👋<br/><br/>
+              I'm your personal crypto educator. Ask me anything about:<br/><br/>
+              • ₿ Bitcoin, Ξ Ethereum, ◈ BNB<br/>
+              • ⛓️ Blockchain technology<br/>
+              • 📊 DCA investing strategies<br/>
+              • 📈 Market trends & analysis<br/>
+              • 🔐 Wallets & security<br/><br/>
+              What would you like to learn today?
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <div class="chat-input-row">
+            <textarea
+              class="chat-input"
+              id="chat-input"
+              placeholder="Ask anything about crypto..."
+              rows="1"
+              onkeydown="handleChatKey(event)"
+            ></textarea>
+            <button class="send-btn" onclick="sendChat()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LEARN MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕ Close</button>
+    <div class="modal-content" id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// =====================================
+// CONFIGURATION
+// =====================================
+const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0')
+  ? 'http://localhost:3001'
+  : window.location.origin;
+
+let currentCoin = 'btc';
+let currentDays = 7;
+let priceChart = null;
+let dcaChart = null;
+let chatHistory = [];
+
+// =====================================
+// PAGE NAVIGATION
+// =====================================
+function showPage(name, btn, autoMsg) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  const page = document.getElementById('page-' + name);
+  if (page) { page.classList.add('active'); page.classList.remove('fade-in'); void page.offsetWidth; page.classList.add('fade-in'); }
+  if (btn) btn.classList.add('active');
+  if (name === 'home') { loadPrices(); loadTrending(); loadChart('btc', 7); }
+  if (name === 'learn') renderLearnCards();
+  if (name === 'chat' && autoMsg) setTimeout(() => sendQuickMsg(autoMsg), 300);
+}
+
+// =====================================
+// LIVE PRICES
+// =====================================
+async function loadPrices() {
+  try {
+    const res = await fetch(`${API_BASE}/api/prices`);
+    const { data } = await res.json();
+    updateTicker('btc', data.bitcoin);
+    updateTicker('eth', data.ethereum);
+    updateTicker('bnb', data.binancecoin);
+  } catch (e) { console.log('Price load failed:', e.message); }
+}
+
+function updateTicker(coin, d) {
+  if (!d) return;
+  const priceEl = document.getElementById(`${coin}-price`);
+  const changeEl = document.getElementById(`${coin}-change`);
+  if (priceEl) priceEl.textContent = '$' + d.usd.toLocaleString(undefined, {minimumFractionDigits:0,maximumFractionDigits:0});
+  if (changeEl) {
+    const c = d.usd_24h_change;
+    changeEl.textContent = (c >= 0 ? '+' : '') + c?.toFixed(2) + '%';
+    changeEl.className = 'coin-change ' + (c >= 0 ? 'up' : 'down');
+  }
+}
+
+// =====================================
+// PRICE CHART
+// =====================================
+async function loadChart(coin, days) {
+  try {
+    const res = await fetch(`${API_BASE}/api/chart/${coin}?days=${days}`);
+    const { data } = await res.json();
+    renderChart(data.prices, coin);
+  } catch (e) { console.log('Chart failed:', e.message); }
+}
+
+function renderChart(prices, coin) {
+  const colors = { btc: '#F7931A', eth: '#627EEA', bnb: '#F3BA2F' };
+  const color = colors[coin] || '#00E5FF';
+  const labels = prices.map(p => new Date(p[0]).toLocaleDateString('en', {month:'short',day:'numeric'}));
+  const data = prices.map(p => p[1]);
+  if (priceChart) priceChart.destroy();
+  const ctx = document.getElementById('priceChart').getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 220);
+  grad.addColorStop(0, color + '33'); grad.addColorStop(1, color + '00');
+  priceChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [{ data, borderColor: color, backgroundColor: grad, borderWidth: 2, pointRadius: 0, tension: 0.4, fill: true }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        mode: 'index', intersect: false,
+        callbacks: { label: ctx => '$' + ctx.raw.toLocaleString(undefined,{maximumFractionDigits:2}) }
+      }},
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748B', maxTicksLimit: 8, font:{size:10} } },
+        y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748B', callback: v => '$'+v.toLocaleString(undefined,{maximumFractionDigits:0}), font:{size:10} } }
+      }
+    }
+  });
+}
+
+function switchChart(coin, el) {
+  currentCoin = coin;
+  document.querySelectorAll('.coin-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  loadChart(coin, currentDays);
+}
+
+function switchDays(days, el) {
+  currentDays = days;
+  document.querySelectorAll('.chart-tab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  loadChart(currentCoin, days);
+}
+
+// =====================================
+// TRENDING
+// =====================================
+async function loadTrending() {
+  try {
+    const res = await fetch(`${API_BASE}/api/trending`);
+    const { data } = await res.json();
+    const html = data.map((c, i) => `
+      <div class="trending-item">
+        <div class="trending-rank">${i+1}</div>
+        <div class="trending-name">
+          <div class="name">${c.name}</div>
+          <div class="symbol">${c.symbol?.toUpperCase()}</div>
+        </div>
+        <div class="coin-change ${parseFloat(c.priceChange) >= 0 ? 'up' : 'down'}">
+          ${parseFloat(c.priceChange) >= 0 ? '▲' : '▼'} ${Math.abs(c.priceChange)}%
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('trending-list').innerHTML = html;
+  } catch (e) { console.log('Trending failed:', e.message); }
+}
+
+// =====================================
+// DCA CALCULATOR
+// =====================================
+async function calcDCA() {
+  const coin = document.getElementById('dca-coin').value;
+  const amount = document.getElementById('dca-amount').value;
+  const freq = document.getElementById('dca-freq').value;
+  const months = document.getElementById('dca-months').value;
+  const btn = document.querySelector('.btn-primary');
+  btn.textContent = '⏳ Calculating...'; btn.disabled = true;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/dca/${coin}?amount=${amount}&frequency=${freq}&months=${months}`);
+    const { data } = await res.json();
+    renderDCAResults(data, coin);
+  } catch (e) {
+    document.getElementById('dca-results').innerHTML = `<p style="color:var(--red)">Failed to load data. Please try again.</p>`;
+  }
+  btn.textContent = '⚡ Calculate DCA'; btn.disabled = false;
+}
+
+function renderDCAResults(data, coin) {
+  const s = data.summary;
+  const isProfit = parseFloat(s.profitLoss) >= 0;
+  const coinNames = {btc:'Bitcoin',eth:'Ethereum',bnb:'BNB'};
+
+  document.getElementById('dca-results').innerHTML = `
+    <div class="section-title"><div class="icon">📊</div> ${coinNames[coin]} DCA Results</div>
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="result-label">Total Invested</div>
+        <div class="result-value">$${parseFloat(s.totalInvested).toLocaleString()}</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Current Value</div>
+        <div class="result-value ${isProfit?'profit':'loss'}">$${parseFloat(s.currentValue).toLocaleString()}</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Profit / Loss</div>
+        <div class="result-value ${isProfit?'profit':'loss'}">${isProfit?'+':''}$${parseFloat(s.profitLoss).toLocaleString()}</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">ROI</div>
+        <div class="result-value ${isProfit?'profit':'loss'}">${isProfit?'+':''}${s.roi}%</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Avg Buy Price</div>
+        <div class="result-value">$${parseFloat(s.avgBuyPrice).toLocaleString()}</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Coins Acquired</div>
+        <div class="result-value">${parseFloat(s.totalCoins).toFixed(4)}</div>
+      </div>
+    </div>
+    <div style="padding:0.75rem 1rem;border-radius:12px;background:${isProfit?'rgba(16,185,129,0.1)':'rgba(239,68,68,0.1)'};border:1px solid ${isProfit?'rgba(16,185,129,0.2)':'rgba(239,68,68,0.2)'}">
+      <p style="font-size:0.85rem;color:${isProfit?'var(--green)':'var(--red)'}">
+        ${isProfit ? '🚀 Your DCA strategy would have been profitable!' : '📉 This period was a loss, but DCA reduces downside vs lump-sum.'}
+      </p>
+    </div>
+  `;
+
+  // Render DCA chart
+  const entries = data.entries;
+  if (entries && entries.length > 0 && document.getElementById('dcaChart')) {
+    if (dcaChart) dcaChart.destroy();
+    const ctx = document.getElementById('dcaChart').getContext('2d');
+    dcaChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: entries.map(e => e.date),
+        datasets: [
+          { label: 'Entry Price', data: entries.map(e => parseFloat(e.price)), backgroundColor: 'rgba(0,229,255,0.6)', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#64748B' } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#64748B', font:{size:9} } },
+          y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748B', callback: v => '$'+v.toLocaleString(undefined,{maximumFractionDigits:0}), font:{size:10} } }
+        }
+      }
+    });
+  }
+}
+
+// =====================================
+// AI CHAT
+// =====================================
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  addMessage('user', msg);
+  addTyping();
+  chatHistory.push({ role: 'user', content: msg });
+
+  try {
+    const res = await fetch(`${API_BASE}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg, history: chatHistory.slice(-6) })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.reply || 'Sorry, I could not process that.';
+    addMessage('bot', reply);
+    chatHistory.push({ role: 'assistant', content: reply });
+    if (data.model) document.getElementById('model-info').textContent = data.model;
+  } catch (e) {
+    removeTyping();
+    addMessage('bot', '⚠️ Connection error. Make sure the backend is running on port 3001!');
+  }
+}
+
+function sendQuickMsg(msg) {
+  showPage('chat');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('nav button')[3].classList.add('active');
+  setTimeout(() => {
+    document.getElementById('chat-input').value = msg;
+    sendChat();
+  }, 100);
+}
+
+function addMessage(role, content) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role} fade-in`;
+  const avatar = role === 'bot' ? '🧠' : '👤';
+  div.innerHTML = `
+    <div class="msg-avatar">${avatar}</div>
+    <div class="msg-bubble">${formatMsg(content)}</div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function formatMsg(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^#{1,3} (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^[-•] (.+)$/gm, '• $1<br>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
+function addTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typing-msg';
+  div.innerHTML = `<div class="msg-avatar">🧠</div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-msg');
+  if (t) t.remove();
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+// =====================================
+// LEARN CARDS
+// =====================================
+const LEARN_TOPICS = [
+  { id:'btc', icon:'₿', title:'Bitcoin (BTC)', desc:'Digital gold, store of value, halving cycles, and why BTC is the foundation of crypto.', tag:'Beginner', color:'#F7931A' },
+  { id:'ethereum', icon:'Ξ', title:'Ethereum (ETH)', desc:'Smart contracts, DeFi, NFTs, Proof of Stake, and why ETH is called the "world computer".', tag:'Beginner', color:'#627EEA' },
+  { id:'bnb', icon:'◈', title:'BNB (Binance Coin)', desc:'The Binance ecosystem, BSC chain, use cases, and how BNB burns reduce supply.', tag:'Beginner', color:'#F3BA2F' },
+  { id:'blockchain', icon:'⛓️', title:'How Blockchain Works', desc:'Distributed ledgers, nodes, blocks, cryptographic hashing, and why blockchains are immutable.', tag:'Core Concept', color:'#00E5FF' },
+  { id:'wallet', icon:'🔐', title:'Wallets & Security', desc:'Hot vs cold wallets, seed phrases, private keys, and how to keep your crypto safe.', tag:'Essential', color:'#10B981' },
+  { id:'dca', icon:'📊', title:'DCA Strategy', desc:'Dollar Cost Averaging explained — why it works, how to apply it, and historical performance data.', tag:'Strategy', color:'#7C3AED' },
+  { id:'defi', icon:'🏦', title:'DeFi Explained', desc:'Decentralized finance — lending, borrowing, yield farming, and liquidity pools without banks.', tag:'Advanced', color:'#EF4444' },
+  { id:'trends', icon:'📈', title:'Market Trends', desc:'Bull/bear cycles, market dominance, Fear & Greed Index, on-chain signals, and cycle analysis.', tag:'Analysis', color:'#F59E0B' },
+  { id:'risk', icon:'⚠️', title:'Risk Management', desc:'How to invest safely — position sizing, portfolio allocation, avoiding scams and rug pulls.', tag:'Essential', color:'#06B6D4' },
+];
+
+const LEARN_CONTENT = {
+  btc: `## ₿ Bitcoin — Digital Gold\n\n**What is Bitcoin?**\nBitcoin (BTC) is the world's first decentralized digital currency, created in 2009 by the pseudonymous Satoshi Nakamoto. It operates without a central bank or single administrator.\n\n**Why Bitcoin is Valuable:**\n• **Scarcity:** Only 21 million BTC will ever exist\n• **Security:** The most battle-tested blockchain network\n• **Decentralization:** No single entity controls it\n• **Network Effect:** Largest crypto community worldwide\n\n**Bitcoin Halving Cycles:**\nEvery ~4 years, the Bitcoin block reward is cut in half. This reduces new supply entering the market:\n- 2012: 50→25 BTC per block\n- 2016: 25→12.5 BTC\n- 2020: 12.5→6.25 BTC\n- 2024: 6.25→3.125 BTC\n\nHistorically, each halving has been followed by a major bull run within 12-18 months.\n\n**Bitcoin Use Cases:**\n• Store of value (digital gold)\n• Borderless payments\n• Inflation hedge\n• Remittances (send money globally cheaply)\n\n**Key Stats:**\n• Created: January 3, 2009\n• Max Supply: 21,000,000 BTC\n• Block time: ~10 minutes\n• Consensus: Proof of Work (SHA-256)\n\n⚠️ **Investing Note:** Bitcoin is volatile. Always invest only what you can afford to lose and consider a DCA strategy.`,
+
+  ethereum: `## Ξ Ethereum — The World Computer\n\n**What is Ethereum?**\nEthereum is a decentralized platform that enables smart contracts and decentralized applications (dApps) to run without downtime, censorship, or third-party interference.\n\n**Smart Contracts Explained:**\nSmart contracts are self-executing programs stored on the blockchain. They run automatically when predetermined conditions are met — no middleman needed!\n\n**Example:** A smart contract can hold funds in escrow and automatically release them when delivery is confirmed.\n\n**Ethereum's Ecosystem:**\n• **DeFi:** $50B+ locked in lending/trading protocols\n• **NFTs:** Digital ownership of art, gaming items\n• **DAOs:** Decentralized organizations governed by token holders\n• **Stablecoins:** USDC, DAI run on Ethereum\n\n**The Merge (2022):**\nEthereum switched from Proof of Work to Proof of Stake, reducing energy usage by 99.95% and making ETH holders eligible for staking rewards (~4-6% APY).\n\n**Gas Fees:**\nTransactions on Ethereum cost "gas" (paid in ETH). Fees vary by network demand. Layer 2 solutions like Arbitrum and Optimism dramatically reduce fees.\n\n**ETH vs BTC:**\n| Feature | BTC | ETH |\n|---------|-----|-----|\n| Purpose | Store of Value | Smart Contract Platform |\n| Supply | 21M max | Unlimited (deflationary) |\n| Consensus | PoW | PoS |\n| Programmable | No | Yes |`,
+
+  bnb: `## ◈ BNB — The Binance Ecosystem Token\n\n**What is BNB?**\nBNB (Build and Build) is the native cryptocurrency of the Binance ecosystem — the world's largest crypto exchange. Originally launched as an ERC-20 token in 2017, BNB now powers its own blockchain.\n\n**BNB Use Cases:**\n• Pay trading fees on Binance (25% discount)\n• Gas fees on BNB Smart Chain (BSC)\n• DeFi on PancakeSwap and other BSC protocols\n• NFTs and gaming on BNB Chain\n• Travel, shopping, and entertainment via Binance Pay\n\n**BNB Smart Chain (BSC):**\n• Block time: 3 seconds (fast!)\n• Transaction cost: Very low (~$0.05)\n• EVM compatible (works with MetaMask, Ethereum tools)\n• Thousands of tokens and DeFi protocols\n\n**Token Burns:**\nBinance permanently destroys (burns) BNB every quarter based on trading volume and revenue. This reduces the total supply over time, creating deflationary pressure.\n\n**Starting Supply:** 200,000,000 BNB\n**Target Supply:** 100,000,000 BNB (burning down to half)\n\n**Popular BSC Projects:**\n• PancakeSwap (largest DEX on BSC)\n• Venus Protocol (lending/borrowing)\n• Alpaca Finance (yield farming)\n\n⚠️ **Note:** BNB's value is closely tied to Binance exchange performance and regulatory environment.`,
+
+  blockchain: `## ⛓️ How Blockchain Technology Works\n\n**The Problem Blockchain Solves:**\nHow do you transfer value between strangers on the internet without a trusted middleman (like a bank)? Blockchain's answer: distributed consensus.\n\n**What is a Blockchain?**\nA blockchain is an append-only distributed database (ledger) shared across thousands of computers (nodes). Once data is written, it cannot be altered — making it immutable.\n\n**Anatomy of a Block:**\nEach block contains:\n1. **Data:** Transactions (who sent what to whom)\n2. **Hash:** Unique fingerprint of this block\n3. **Previous Hash:** Links back to prior block\n4. **Timestamp:** When the block was created\n5. **Nonce:** Number used in mining process\n\n**Why the Chain Can't Be Tampered:**\nChanging any block would change its hash, breaking the link to all subsequent blocks. An attacker would need to redo the computational work for ALL later blocks faster than the honest network — practically impossible.\n\n**Consensus Mechanisms:**\n\n**Proof of Work (PoW) — Bitcoin:**\nMiners compete to solve a complex mathematical puzzle. Winner adds the block and gets the reward. Requires massive energy but is extremely secure.\n\n**Proof of Stake (PoS) — Ethereum:**\nValidators lock up (stake) crypto as collateral. They're randomly chosen to propose blocks, proportional to their stake. Energy efficient, scalable.\n\n**Transaction Flow:**\n1. Alice wants to send 1 BTC to Bob\n2. Transaction broadcast to the network\n3. Nodes verify Alice has sufficient balance\n4. Miners/validators package it into a block\n5. Block added to chain (confirmed)\n6. Bob receives 1 BTC ✓`,
+
+  wallet: `## 🔐 Crypto Wallets & Security\n\n**What is a Crypto Wallet?**\nA crypto wallet doesn't actually store your crypto — it stores your private keys (like a password) that prove ownership of your funds on the blockchain.\n\n**Types of Wallets:**\n\n**🌐 Hot Wallets (Connected to internet)**\n- MetaMask (browser extension)\n- Trust Wallet (mobile)\n- Coinbase Wallet\n- Best for: Small amounts, daily use, DeFi\n- Risk: Vulnerable to hacking if device compromised\n\n**❄️ Cold Wallets (Offline)**\n- Ledger Nano S/X (hardware device)\n- Trezor Model T\n- Paper wallets\n- Best for: Long-term storage, large amounts\n- Risk: Physical loss or damage\n\n**The Key Concepts:**\n\n**Public Key (Wallet Address):**\nLike your email address — share freely to receive crypto\nExample: 0x742d35Cc6634C0532925a3b844Bc9e04...\n\n**Private Key:**\nLike your email password — NEVER share!\nAnyone with your private key controls your funds!\n\n**Seed Phrase (Recovery Phrase):**\n12 or 24 random words (e.g., "apple mountain river...")\nThis generates ALL your private keys\nAnyone with these words owns your crypto\n\n**🛡️ Security Golden Rules:**\n1. Never share your seed phrase with ANYONE\n2. Write seed phrase on paper, store in safe location\n3. Never store seed phrase digitally (photos, cloud, email)\n4. For amounts over $1,000 — use a hardware wallet\n5. Use separate wallets for DeFi and long-term storage\n6. Beware of phishing sites mimicking wallet apps`,
+
+  dca: `## 📊 Dollar Cost Averaging (DCA)\n\n**What is DCA?**\nInstead of investing a lump sum all at once, DCA involves investing a fixed amount at regular intervals (weekly, monthly) regardless of price. This removes the pressure of "timing the market."\n\n**Why DCA Works in Crypto:**\nCrypto is extremely volatile. DCA means:\n• You automatically buy MORE when prices are LOW\n• You buy LESS when prices are HIGH\n• Over time, this averages out your cost basis\n\n**DCA Example:**\n| Week | BTC Price | $100 Invested | BTC Bought |\n|------|-----------|---------------|-------------|\n| 1 | $60,000 | $100 | 0.00167 BTC |\n| 2 | $45,000 | $100 | 0.00222 BTC |\n| 3 | $55,000 | $100 | 0.00182 BTC |\n| 4 | $70,000 | $100 | 0.00143 BTC |\n| **Total** | | **$400** | **0.00714 BTC** |\n\nAverage cost: $400 ÷ 0.00714 = **$56,022 per BTC**\n(Better than buying all at $70,000!)\n\n**DCA vs Lump Sum:**\n• DCA wins in bear/sideways markets\n• Lump sum can win more in strong bull markets\n• DCA is psychologically easier — less FOMO/FUD\n\n**How to DCA:**\n1. Decide amount ($50-500/week or month)\n2. Pick your coins (BTC, ETH, BNB)\n3. Set up recurring buys on Binance/Coinbase\n4. IGNORE short-term price movements\n5. Review strategy every 6-12 months\n\n**DCA Apps:**\n- Binance Auto-Invest\n- Coinbase Recurring Buys\n- Swan Bitcoin (BTC only)\n\n💡 **The Boring Truth:** Regular DCA + long-term holding has historically been one of the most effective crypto strategies for ordinary investors.`,
+
+  defi: `## 🏦 DeFi — Decentralized Finance\n\n**What is DeFi?**\nDeFi recreates traditional financial services (lending, borrowing, trading, saving) on blockchain — without banks, brokers, or middlemen. Anyone with an internet connection can access it.\n\n**DeFi vs Traditional Finance:**\n| Feature | Bank | DeFi |\n|---------|------|------|\n| Access | KYC required | Anyone, worldwide |\n| Hours | Business hours | 24/7/365 |\n| Custody | Bank holds funds | You hold keys |\n| Transparency | Opaque | Fully auditable |\n| Interest | 0.01-0.5% | 2-20%+ |\n\n**Key DeFi Concepts:**\n\n**Liquidity Pools:**\nUsers deposit two tokens into a pool. Traders swap against this pool, paying fees that go to liquidity providers.\n\n**Yield Farming:**\nEarning crypto rewards by providing liquidity or staking. Higher rewards = higher risk.\n\n**Lending/Borrowing:**\nDeposit crypto as collateral, borrow other assets. No credit check needed — the smart contract manages everything.\n\n**Popular DeFi Protocols:**\n- Uniswap (DEX - Ethereum)\n- PancakeSwap (DEX - BNB Chain)\n- Aave (lending/borrowing)\n- Compound (lending)\n- Curve (stablecoin DEX)\n\n**DeFi Risks:**\n• Smart contract bugs (code vulnerabilities)\n• Impermanent loss for liquidity providers\n• Rug pulls (developers abandon projects)\n• Regulatory uncertainty\n• High Ethereum gas fees\n\n⚠️ Only use DeFi protocols that have been audited by reputable security firms!`,
+
+  trends: `## 📈 Crypto Market Trends & Cycles\n\n**The Four Market Phases:**\n\n**1. Accumulation (Post-Crash)**\n- Prices are low, sentiment is negative\n- Smart money quietly buying\n- "Crypto is dead" headlines everywhere\n- Best time to DCA\n\n**2. Bull Market**\n- Prices rising, FOMO kicking in\n- Media coverage increases\n- Everyone becomes a crypto expert\n- ATHs being set\n\n**3. Distribution (Market Top)**\n- Early investors selling into retail buying\n- Extreme greed on Fear & Greed Index\n- Altcoin season peaks\n- Warning signs ignored\n\n**4. Bear Market**\n- Prices crash 70-90%\n- Panic selling\n- Weak projects die\n- Diamond hands accumulate for next cycle\n\n**Key Metrics to Watch:**\n\n• **Bitcoin Dominance:** High = altcoins underperforming. Decreasing = altcoin season starting.\n• **Fear & Greed Index:** 0=Extreme Fear (buy signal), 100=Extreme Greed (caution)\n• **Total Market Cap:** Overall crypto health\n• **Exchange Flows:** BTC leaving exchanges = bullish (people holding)\n• **Hash Rate:** Higher = network stronger = bullish\n\n**Bitcoin Cycle Pattern:**\nHistorically, BTC follows a ~4-year cycle tied to the halving:\n- Halving → 12-18 months → ATH → Bear market → Accumulation → Next halving\n\n**Altcoin Season:**\nTypically happens late in bull cycles when BTC stabilizes at highs and capital rotates into altcoins seeking higher returns.`,
+
+  risk: `## ⚠️ Crypto Risk Management\n\n**The #1 Rule:**\n> Only invest what you can afford to LOSE COMPLETELY.\n\nCrypto is the most volatile major asset class. Drawdowns of 70-90% from highs are normal.\n\n**Position Sizing:**\nNever go "all in" on any single crypto.\n\n**Example Beginner Portfolio ($1,000):**\n- 50% BTC ($500) — most stable\n- 30% ETH ($300) — established platform\n- 20% BNB ($200) — utility token\n- 0% random altcoins until you learn more\n\n**Risk by Category:**\n🟢 Lower Risk: BTC, ETH (top 2 by market cap)\n🟡 Medium Risk: BNB, SOL, other top 10 coins\n🔴 High Risk: Small cap altcoins\n🚨 Extreme Risk: Memecoins, new unknown tokens, leverage trading\n\n**Common Traps to Avoid:**\n\n• **FOMO Buying:** Buying because it's mooning → usually buy tops\n• **Panic Selling:** Selling during crashes → lock in losses\n• **Leverage Trading:** Can lose more than you invest\n• **Influencer Tips:** Always DYOR — they may be paid to promote\n• **Rug Pulls:** Anonymous team + unrealistic promises = red flag\n• **Fake Exchanges:** Only use Binance, Coinbase, Kraken, etc.\n\n**Red Flags:**\n❌ "Guaranteed returns" of any amount\n❌ Promises of 100x in days/weeks\n❌ Anonymous development team\n❌ No whitepaper or roadmap\n❌ Pressure to "buy now before it's too late"\n❌ Requests to send crypto for "verification"\n\n**Tax Reminder:**\nIn most countries, crypto gains are taxable events. Keep records of all transactions!`
+};
+
+function renderLearnCards() {
+  const grid = document.getElementById('learn-grid');
+  if (grid.children.length > 0) return;
+  grid.innerHTML = LEARN_TOPICS.map(t => `
+    <div class="learn-card" style="--card-color:${t.color}" onclick="openLearnModal('${t.id}')">
+      <div class="learn-card-icon">${t.icon}</div>
+      <h3>${t.title}</h3>
+      <p>${t.desc}</p>
+      <span class="learn-card tag">${t.tag}</span>
+    </div>
+  `).join('');
+}
+
+function openLearnModal(id) {
+  const content = LEARN_CONTENT[id];
+  if (!content) return;
+  document.getElementById('modal-content').innerHTML = formatMsg(content);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay') || e.target.classList.contains('modal-close')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// =====================================
+// CHECK AI MODEL
+// =====================================
+async function checkHealth() {
+  try {
+    const res = await fetch(`${API_BASE}/api/health`);
+    const data = await res.json();
+    const modelEl = document.getElementById('model-info');
+    if (modelEl) modelEl.textContent = data.aiMode || 'Built-in Mode';
+  } catch (e) {
+    const modelEl = document.getElementById('model-info');
+    if (modelEl) modelEl.textContent = 'Backend not connected';
+  }
+}
+
+// =====================================
+// INIT
+// =====================================
+window.addEventListener('load', () => {
+  loadPrices();
+  loadTrending();
+  loadChart('btc', 7);
+  checkHealth();
+  setInterval(loadPrices, 60000); // Refresh prices every minute
+});
+</script>
+</body>
+</html>
