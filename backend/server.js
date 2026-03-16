@@ -178,7 +178,7 @@ app.get('/api/trending', async (req, res) => {
 // =============================================
 
 // System prompt for crypto educator
-const CRYPTO_SYSTEM_PROMPT = `You are CryptoSage, an expert cryptocurrency educator specializing in:
+const CRYPTO_SYSTEM_PROMPT = `You are Openclaw AI Crypto Educator, an expert cryptocurrency educator specializing in:
 - Bitcoin (BTC), Ethereum (ETH), and BNB (Binance Coin)
 - Blockchain technology fundamentals
 - DCA (Dollar Cost Averaging) investment strategies
@@ -281,7 +281,7 @@ app.post('/api/chat', async (req, res) => {
   res.json({
     success: true,
     reply: fallbackReply,
-    model: 'CryptoSage Built-in (No API key needed)',
+    model: 'Openclaw AI Built-in (No API key needed)',
     isFallback: true
   });
 });
@@ -323,19 +323,19 @@ function getFallbackResponse(message) {
   }
 
   // Default response
-  return `## 👋 Welcome to CryptoSage!\n\nI'm your AI crypto educator! I can teach you about:\n\n₿ **Bitcoin (BTC)** - Digital gold, store of value\nΞ **Ethereum (ETH)** - Smart contracts & DeFi\n🟡 **BNB** - Binance ecosystem token\n⛓️ **Blockchain** - How it all works\n📊 **DCA Strategy** - Smart investing technique\n📈 **Market Trends** - Bull/bear cycles\n🔐 **Wallets & Security** - Keep your crypto safe\n\n**Try asking me:**\n- "What is Bitcoin and why is it valuable?"\n- "Explain DCA investing strategy"\n- "How does blockchain technology work?"\n- "What are the risks of crypto investing?"\n- "Compare BTC vs ETH"\n\nWhat would you like to learn today? 🚀`;
+  return `## 👋 Welcome to Openclaw AI Crypto Educator!\n\nI'm your AI crypto educator! I can teach you about:\n\n₿ **Bitcoin (BTC)** - Digital gold, store of value\nΞ **Ethereum (ETH)** - Smart contracts & DeFi\n🟡 **BNB** - Binance ecosystem token\n⛓️ **Blockchain** - How it all works\n📊 **DCA Strategy** - Smart investing technique\n📈 **Market Trends** - Bull/bear cycles\n🔐 **Wallets & Security** - Keep your crypto safe\n\n**Try asking me:**\n- "What is Bitcoin and why is it valuable?"\n- "Explain DCA investing strategy"\n- "How does blockchain technology work?"\n- "What are the risks of crypto investing?"\n- "Compare BTC vs ETH"\n\nWhat would you like to learn today? 🚀`;
 }
 
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
-    message: 'Crypto Educator API is running!',
+    message: 'Openclaw AI Crypto Educator running!',
     aiMode: process.env.GROQ_API_KEY && process.env.GROQ_API_KEY !== 'your_groq_api_key_here'
       ? 'Groq AI (Live)'
       : process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY !== 'your_openrouter_api_key_here'
         ? 'OpenRouter AI (Live)'
-        : 'Built-in CryptoSage (No API Key Required)',
+        : 'Built-in Openclaw AI (No API Key Required)',
     endpoints: ['/api/prices', '/api/chart/:coin', '/api/dca/:coin', '/api/trending', '/api/chat']
   });
 });
@@ -346,7 +346,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`\n🚀 Crypto Educator running on http://localhost:${PORT}`);
+  console.log(`\n🚀 Openclaw AI Crypto Educator running on http://localhost:${PORT}`);
   console.log(`📊 Dashboard: http://localhost:${PORT}`);
   console.log(`🤖 AI Mode: ${
     process.env.GROQ_API_KEY !== 'your_groq_api_key_here'

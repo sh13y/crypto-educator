@@ -450,55 +450,51 @@ nav button.active{color:var(--accent)}
       </div>
     </div>
 
+    <!-- Trending & Quick Learn -->
     <div class="grid-2">
-      <!-- Chart -->
-      <div>
-        <div class="chart-container">
-          <div class="section-title" style="margin-bottom:1rem">
-            <div class="icon">📈</div> Price Chart
-          </div>
-          <div class="coin-selector">
-            <button class="coin-btn btc active" onclick="switchChart('btc',this)">₿ BTC</button>
-            <button class="coin-btn eth" onclick="switchChart('eth',this)">Ξ ETH</button>
-            <button class="coin-btn bnb" onclick="switchChart('bnb',this)">◈ BNB</button>
-          </div>
-          <div class="chart-tabs">
-            <button class="chart-tab active" onclick="switchDays(7,this)">7D</button>
-            <button class="chart-tab" onclick="switchDays(30,this)">30D</button>
-            <button class="chart-tab" onclick="switchDays(90,this)">90D</button>
-            <button class="chart-tab" onclick="switchDays(365,this)">1Y</button>
-          </div>
-          <canvas id="priceChart" height="220"></canvas>
+      <!-- Trending -->
+      <div class="card">
+        <div class="section-title">
+          <div class="icon">🔥</div> Trending Now
+        </div>
+        <div id="trending-list">
+          <div class="skeleton" style="height:48px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:48px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:48px"></div>
         </div>
       </div>
 
-      <!-- Right column -->
-      <div>
-        <!-- Trending -->
-        <div class="card" style="margin-bottom:1.5rem;height:400px;display:flex;flex-direction:column">
-          <div class="section-title">
-            <div class="icon">🔥</div> Trending Now
-          </div>
-          <div id="trending-list" style="overflow-y:auto;flex:1">
-            <div class="skeleton" style="height:48px;margin-bottom:8px"></div>
-            <div class="skeleton" style="height:48px;margin-bottom:8px"></div>
-            <div class="skeleton" style="height:48px"></div>
-          </div>
+      <!-- Quick Learn -->
+      <div class="card">
+        <div class="section-title">
+          <div class="icon">⚡</div> Quick Learn
         </div>
-
-        <!-- Quick Learn -->
-        <div class="card">
-          <div class="section-title">
-            <div class="icon">⚡</div> Quick Learn
-          </div>
-          <div style="display:flex;flex-direction:column;gap:0.5rem">
-            <button class="quick-btn" onclick="openLearnModal('dca')">📊 What is DCA Strategy?</button>
-            <button class="quick-btn" onclick="openLearnModal('blockchain')">⛓️ How does blockchain work?</button>
-            <button class="quick-btn" onclick="openLearnModal('wallet')">🔐 Crypto wallets explained</button>
-            <button class="quick-btn" onclick="showPage('dca',null)">🧮 Calculate my DCA returns</button>
-          </div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem">
+          <button class="quick-btn" onclick="openLearnModal('dca')">📊 What is DCA Strategy?</button>
+          <button class="quick-btn" onclick="openLearnModal('blockchain')">⛓️ How does blockchain work?</button>
+          <button class="quick-btn" onclick="openLearnModal('wallet')">🔐 Crypto wallets explained</button>
+          <button class="quick-btn" onclick="showPage('dca',null)">🧮 Calculate my DCA returns</button>
         </div>
       </div>
+    </div>
+
+    <!-- Price Chart - Full Width Below -->
+    <div class="chart-container" style="margin-top:1.5rem">
+      <div class="section-title" style="margin-bottom:1rem">
+        <div class="icon">📈</div> Price Chart
+      </div>
+      <div class="coin-selector">
+        <button class="coin-btn btc active" onclick="switchChart('btc',this)">₿ BTC</button>
+        <button class="coin-btn eth" onclick="switchChart('eth',this)">Ξ ETH</button>
+        <button class="coin-btn bnb" onclick="switchChart('bnb',this)">◈ BNB</button>
+      </div>
+      <div class="chart-tabs">
+        <button class="chart-tab active" onclick="switchDays(7,this)">7D</button>
+        <button class="chart-tab" onclick="switchDays(30,this)">30D</button>
+        <button class="chart-tab" onclick="switchDays(90,this)">90D</button>
+        <button class="chart-tab" onclick="switchDays(365,this)">1Y</button>
+      </div>
+      <canvas id="priceChart" height="220"></canvas>
     </div>
   </div>
 
@@ -613,14 +609,22 @@ nav button.active{color:var(--accent)}
           <div class="msg bot">
             <div class="msg-avatar">🧠</div>
             <div class="msg-bubble">
-              <strong>Welcome to Binance X Openclaw-AI Crypto Educator!</strong> 👋<br/><br/>
-              I'm your personal crypto educator. Ask me anything about:<br/><br/>
-              • ₿ Bitcoin, Ξ Ethereum, ◈ BNB<br/>
-              • ⛓️ Blockchain technology<br/>
-              • 📊 DCA investing strategies<br/>
-              • 📈 Market trends & analysis<br/>
-              • 🔐 Wallets & security<br/><br/>
-              What would you like to learn today?
+              <strong>Welcome to Openclaw AI Crypto Educator!</strong> 👋<br/><br/>
+              I'm your AI crypto educator! I can teach you about:<br/><br/>
+              • ₿ Bitcoin (BTC) - Digital gold, store of value<br/>
+              • Ξ Ethereum (ETH) - Smart contracts & DeFi<br/>
+              • 🟡 BNB - Binance ecosystem token<br/>
+              • ⛓️ Blockchain - How it all works<br/>
+              • 📊 DCA Strategy - Smart investing technique<br/>
+              • 📈 Market Trends - Bull/bear cycles<br/>
+              • 🔐 Wallets & Security - Keep your crypto safe<br/><br/>
+              Try asking me:<br/>
+              • "What is Bitcoin and why is it valuable?"<br/>
+              • "Explain DCA investing strategy"<br/>
+              • "How does blockchain technology work?"<br/>
+              • "What are the risks of crypto investing?"<br/>
+              • "Compare BTC vs ETH"<br/><br/>
+              What would you like to learn today? 🚀
             </div>
           </div>
         </div>
